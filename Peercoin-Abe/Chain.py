@@ -84,6 +84,7 @@ class Chain(object):
         return util.double_sha256(binary_tx)
 
     def parse_transaction(chain, binary_tx):
+        print ''.join([str(hex(ord(i)))[2:].zfill(2) for i in binary_tx])
         return chain.ds_parse_transaction(util.str_to_ds(binary_tx))
 
     datadir_conf_file_name = "Latium.conf"

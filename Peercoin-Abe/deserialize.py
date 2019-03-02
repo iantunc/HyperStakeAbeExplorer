@@ -41,9 +41,13 @@ def parse_setting(setting, vds):
 def parse_TxIn(vds):
   d = {}
   d['prevout_hash'] = vds.read_bytes(32)
+  #print "Prevout hash: " +  ''.join([str(hex(ord(i)))[2:].zfill(2) for i in d['prevout_hash']])
   d['prevout_n'] = vds.read_uint32()
+  #print "Prevout n: " +  ''.join([str(hex(ord(i)))[2:].zfill(2) for i in d['prevout_n']])
   d['scriptSig'] = vds.read_bytes(vds.read_compact_size())
+  #print "scriptSig: " +  ''.join([str(hex(ord(i)))[2:].zfill(2) for i in d['scriptSig']])
   d['sequence'] = vds.read_uint32()
+  #print "sequence: " +  ''.join([str(hex(ord(i)))[2:].zfill(2) for i in d['sequence']])
   return d
 
 def deserialize_TxIn(d, transaction_index=None, owner_keys=None):
@@ -78,8 +82,9 @@ def deserialize_TxOut(d, owner_keys=None):
     else: result += " Own: False"
   return result
 
-def parse_Transaction(vds, has_nTime=False):
+def parse_Transaction(vds, has_nTime=True):
   d = {}
+  print vds
   start_pos = vds.read_cursor
   d['version'] = vds.read_int32()
   if has_nTime:

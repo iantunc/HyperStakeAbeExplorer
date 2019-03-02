@@ -79,6 +79,8 @@ CHAIN_CONFIG = [
      "code3":"SC0", "address_version":"\x6f", "magic":"\xca\xfe\xba\xbe"},
     {"chain":"Worldcoin",
      "code3":"WDC", "address_version":"\x49", "magic":"\xfb\xc0\xb6\xdb"},
+    {"chain":"HyperStake",
+     "code3":"HYP", "address_version":"\x75", "magic":"\xdb\xad\xbd\xda"},
     {"chain":"NovaCoin"},
     #{"chain":"",
     # "code3":"", "address_version":"\x", "magic":""},
@@ -130,10 +132,10 @@ class DataStore(object):
     def __init__(store, args):
 
         # Open blockhash file for editing
-        if args.hashfile == "":
-            raise Exception("Please set the hashfile config argument to the file of the valid hashes")
+        # if args.hashfile == "":
+        #     raise Exception("Please set the hashfile config argument to the file of the valid hashes")
 
-        store.hashfile = open(args.hashfile, "r+b")
+        store.hashfile = open("hashfile.dat", "r+b")
 
         num_hash_bytes = store.hashfile.read(4)
 
@@ -227,12 +229,13 @@ class DataStore(object):
 
         store.use_firstbits = (store.config['use_firstbits'] == "true")
 
-        for hex_tx in args.import_tx:
-            chain = None
-            if isinstance(hex_tx, dict):
-                chain_name = hex_tx.get("chain")
-                hex_tx = hex_tx.get("tx")
-            store.maybe_import_binary_tx(chain_name, str(hex_tx).decode('hex'))
+        # for hex_tx in args.import_tx:
+        #     chain = None
+        #     if isinstance(hex_tx, dict):
+        #         chain_name = hex_tx.get("chain")
+        #         hex_tx = hex_tx.get("tx")
+        chain = None
+        store.maybe_import_binary_tx(None, str(args.import_tx).decode('hex'))
 
         store.default_loader = args.default_loader
 
@@ -2916,7 +2919,8 @@ store._ddl['txout_approx'],
                         'hashPrev': prev_hash,
                         'hashMerkleRoot':
                             rpc_block['merkleroot'].decode('hex')[::-1],
-                        'nTime':    int(time.mktime(parser.parse(rpc_block['time']).timetuple())),
+                        #'nTime':    int(time.mktime(parser.parse(str(rpc_block['time'])).timetuple())),
+                        'nTime': int(rpc_block['time']),
                         'nBits':    int(rpc_block['bits'], 16),
                         'nNonce':   int(rpc_block['nonce']),
                         'transactions': [],
@@ -2924,9 +2928,9 @@ store._ddl['txout_approx'],
                         'height':   height,
                         }
 
-                    if chain.block_header_hash(chain.serialize_block_header(
-                            block)) != hash:
-                        raise InvalidBlock('block hash mismatch')
+                    # if chain.block_header_hash(chain.serialize_block_header(
+                    #         block)) != hash:
+                    #     raise InvalidBlock('block hash mismatch')
 
                     for rpc_tx_hash in rpc_block['tx']:
                         tx = store.export_tx(tx_hash = str(rpc_tx_hash),
