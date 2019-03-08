@@ -20,10 +20,10 @@ class BCDataStream(object):
   def write(self, bytes):  # Initialize with string of bytes
     if self.input is None:
       self.input = bytes
-      print self.input
+      # print self.input
     else:
       self.input += bytes
-      print self.input
+      # print self.input
 
   def map_file(self, file, start):  # Initialize with bytes from file
     self.input = mmap.mmap(file.fileno(), 0, access=mmap.ACCESS_READ)

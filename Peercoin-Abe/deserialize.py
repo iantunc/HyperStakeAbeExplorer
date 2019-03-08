@@ -84,7 +84,7 @@ def deserialize_TxOut(d, owner_keys=None):
 
 def parse_Transaction(vds, has_nTime=True):
   d = {}
-  print vds
+  # print vds
   start_pos = vds.read_cursor
   d['version'] = vds.read_int32()
   if has_nTime:

@@ -93,7 +93,7 @@ DEFAULT_TEMPLATE = """
 
 DEFAULT_LOG_FORMAT = "%(message)s"
 
-DEFAULT_DECIMALS = 8
+DEFAULT_DECIMALS = 6
 
 # It is fun to change "6" to "3" and search lots of addresses.
 ADDR_PREFIX_RE = re.compile('[1-9A-HJ-NP-Za-km-z]{6,}\\Z')
@@ -1106,7 +1106,8 @@ class Abe:
                   JOIN txout ON (txout.tx_id = tx.tx_id)
                   JOIN pubkey ON (pubkey.pubkey_id = txout.pubkey_id)
                  WHERE pubkey.pubkey_hash = ?
-                   AND cc.in_longest = 1""", (dbhash,))[0]
+                   AND cc.in_longest = 1
+                   GROUP BY cc.chain_id""", (dbhash,))[0]
             chain_id = row[2]
             received[chain_id] = row[0];
             balance[chain_id] = row[0];
@@ -1123,7 +1124,8 @@ class Abe:
                   JOIN txout prevout ON (txin.txout_id = prevout.txout_id)
                   JOIN pubkey ON (pubkey.pubkey_id = prevout.pubkey_id)
                  WHERE pubkey.pubkey_hash = ?
-                   AND cc.in_longest = 1""", (dbhash,))[0]
+                   AND cc.in_longest = 1
+                   GROUP BY cc.chain_id""", (dbhash,))[0]
             out = row[0] if row[0] else 0;
             sent[chain_id] = -out;
             balance[chain_id] += out;
