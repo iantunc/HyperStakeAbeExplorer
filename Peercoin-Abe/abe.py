@@ -39,9 +39,9 @@ import base58
 
 __version__ = version.__version__
 
-ABE_APPNAME = "PPC Abe"
+ABE_APPNAME = "HYP Abe"
 ABE_VERSION = __version__
-ABE_URL = 'https://github.com/MatthewLM/PeercoinAbeExplorer'
+ABE_URL = 'https://github.com/iantunc/HyperStakeAbeExplorer'
 
 COPYRIGHT_YEARS = '2011'
 COPYRIGHT = "Abe developers"
@@ -66,24 +66,21 @@ DEFAULT_TEMPLATE = """
     <link rel="stylesheet" type="text/css" href="%(dotdot)s%(STATIC_PATH)sabe.css" />
     <link rel="shortcut icon" href="%(dotdot)s%(STATIC_PATH)sfavicon.ico" />
     %(extraHead)s
-    <title>%(title)s</title>
+    <title>%(title)s Block Explorer</title>
 </head>
 <body>
     <section id="main">
-    <a href="http://peercoinexplorer.info" title="Go back to the peercoinexplorer.info home">
-        <img id="peercoinexplorerinfo" alt="Go back to the peercoinexplorer.info home" src="%(dotdot)s%(STATIC_PATH)speercoin_explorer_info.png" />
-    </a>
+    <a href="http://hypexplorer.ml" title="Go back to the hypexplorer.ml home">
+        <img id="hypexplorerml" alt="Go back to the hypexplorer.ml home" src="%(dotdot)s%(STATIC_PATH)shyperstake-128.png" />
+    </a><p>
     %(body)s
         <div id="footer">
-            <p><a href="%(dotdot)sq">API</a> (machine-readable pages)</p>
+            <p style="color: #666"><a href="%(dotdot)sq">API</a> (machine-readable pages)</p>
             <p style="font-size: smaller">
-                <span style="font-style: italic">
-                    Powered by <a href="%(ABE_URL)s">%(APPNAME)s</a>
+                <span style="color: #666">
+                    Powered by <a href="%(ABE_URL)s">%(APPNAME)s</a> | 
                 </span>
                 %(download)s
-                Tips appreciated!
-                <a href="http://peercoinexplorer.info/address/%(DONATIONS_PPC)s">PPC</a> 
-                <a href="http://blockchain.info/address/%(DONATIONS_BTC)s">BTC</a>
             </p>
         </div>
     </section>

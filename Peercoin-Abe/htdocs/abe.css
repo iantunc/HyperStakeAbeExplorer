@@ -10,8 +10,8 @@ th{
 section#main{
     width: 100%;
 }
-#peercoinexplorerinfo{
-	width: 380px;
+#hypexplorerml{
+	width: 256px;
 	display: block;
 	margin: 50px auto 20px auto;
 }
@@ -36,12 +36,12 @@ section#main{
 	margin-bottom: 1px;
 }
 #searchBar{
-    width: calc(100% - 10px);
+    width: calc(100% - 11px);
     height: 35px;
-    padding-left: 10px;
+    padding-left:10px;
     border: none;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
     font-weight: bold;
     background-color: #FFF;
 }
@@ -72,12 +72,14 @@ section#main{
 }
 strong{
     padding-right: 3px;
+    color: #666;
 }
 .module_content{
     line-height: 1.5em;
 }
 .width_3_quarter {
     width: 75%;
+    min-width: 920px
 }
 .center3Quart{
     margin-left: 12%;
