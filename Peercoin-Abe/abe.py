@@ -62,14 +62,24 @@ DEFAULT_TEMPLATE = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="%(dotdot)s%(STATIC_PATH)slayout.css" />
     <link rel="stylesheet" type="text/css" href="%(dotdot)s%(STATIC_PATH)sabe.css" />
     <link rel="shortcut icon" href="%(dotdot)s%(STATIC_PATH)sfavicon.ico" />
     %(extraHead)s
+    <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- Popper JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="%(dotdot)s%(STATIC_PATH)sbootstr.css" />
     <title>%(title)s Block Explorer</title>
 </head>
 <body>
-    <section id="main">
+    <section id="main" class="d-flex align-items-center flex-column justify-content-center container-fluid">
     <a href="http://hypexplorer.ml" title="Go back to the hypexplorer.ml home">
         <img id="hypexplorerml" alt="Go back to the hypexplorer.ml home" src="%(dotdot)s%(STATIC_PATH)shyperstake-128.png" />
     </a><p>
@@ -446,13 +456,13 @@ class Abe:
             hi = int(rows[0][1])
         basename = os.path.basename(page['env']['PATH_INFO'])
 
-        nav = ['<div id="nav"><p id="navP1">']
+        nav = ['<div id="nav" class="align-items-center row"><p id="navP1" class="col-sm-4">']
 	if max_height > hi:
 	    nav += ['<a href="',
                basename, '?count=', str(count), '">&#9668;&#9668;</a>']
             nav += [' <a href="', basename, '?hi=', str(hi + count),
                  '&amp;count=', str(count), '">&#9668;<lt;</a>']
-        nav += ['</p><p id="navP2">']
+        nav += ['</p><p id="navP2"class="col-sm-4">']
                  
         for c in (20, 50, 100, 500, 1000):
             nav += [' ']
@@ -465,7 +475,7 @@ class Abe:
             if c != count:
                 nav += ['</a>']
 
-        nav += ['</p><p id="navP3">']         
+        nav += ['</p><p id="navP3" class="col-sm-4">']         
                  
         if hi >= count:
             nav += ['<a href="', basename, '?hi=', str(hi - count),
@@ -479,10 +489,11 @@ class Abe:
         extra = False
         #extra = True
         body += [
-                 '<article class="module width_3_quarter center3Quart">'
+                 '<article class="module w-75">'
                  '<header><h3>BLOCKS</h3></header>'
                  , nav, '\n',
-                 '<table class="tablesorter" cellspacing="0"><thead>'
+                 '<div class="table-responsive">'
+                 '<table class="tablesorter table-striped" cellspacing="0"><thead>'
                  '<tr><th>Block</th>',
                  '<th>Approx. Time</th>',
                  '<th>Transactions</th>',
@@ -534,7 +545,7 @@ class Abe:
                  '</td><td>', '%8g' % total_ss] if extra else '',
                 '</td></tr>\n']
 
-        body += ['</table>\n', nav, '</article>\n']
+        body += ['</table></div>\n', nav, '</article>\n']
 
     def _show_block(abe, where, bind, page, dotdotblock, chain):
         address_version = ('\0' if chain is None
@@ -682,46 +693,46 @@ class Abe:
                           escape(chain.name), '?hi=', height, '">',
                           escape(chain.name), '</a> ', height]
 
-        body += ['<article class="module width_3_quarter center3Quart"><header><h3>BLOCK INFORMATION</h3></header><div class="module_content"><strong>']
+        body += ['<article class="module w-75"><header><h3>BLOCK INFORMATION</h3></header><div class="module_content">']
         if is_stake_chain:
             body += [
                 'Proof of Stake' if is_proof_of_stake else 'Proof of Work',
-                ':</strong> ',
+                ': ',
                 format_satoshis(generated, chain), ' coins generated<br />\n']
-        body += ['<strong>Hash:</strong> ', block_hash, '<br />\n']
+        body += ['Hash: ', block_hash, '<br />\n']
 
         if prev_block_hash is not None:
-            body += ['<strong>Previous Block:</strong> <a href="', dotdotblock,
+            body += ['Previous Block: <a href="', dotdotblock,
                      prev_block_hash, '">', prev_block_hash, '</a><br />\n']
         if next_list:
-            body += ['<strong>Next Block:</strong> ']
+            body += ['Next Block: ']
         for row in next_list:
             hash = abe.store.hashout_hex(row[0])
             body += ['<a href="', dotdotblock, hash, '">', hash, '</a><br />\n']
 
         body += [
-            ['<strong>Height:</strong> ', height, '<br />\n']
+            ['Height: ', height, '<br />\n']
             if height is not None else '',
 
-            '<strong>Version:</strong> ', block_version, '<br />\n',
-            '<strong>Transaction Merkle Root:</strong> ', hashMerkleRoot, '<br />\n',
-            '<strong>Time:</strong> ', nTime, ' (', format_time(nTime), ')<br />\n',
-            '<strong>Difficulty:</strong> ', format_difficulty(util.calculate_difficulty(nBits)),
+            'Version: ', block_version, '<br />\n',
+            'Transaction Merkle Root: ', hashMerkleRoot, '<br />\n',
+            'Time: ', nTime, ' (', format_time(nTime), ')<br />\n',
+            'Difficulty: ', format_difficulty(util.calculate_difficulty(nBits)),
 
-            '<br /><strong>Nonce:</strong> ', nNonce, '<br />\n',
-            '<strong>Transactions:</strong> ', num_tx, '<br />\n',
-            '<strong>Value out:</strong> ', format_satoshis(value_out, chain), '<br />\n',
-            '<strong>Transaction Fees:</strong> ', format_satoshis(block_fees, chain), '<br />\n',
+            '<br />Nonce: ', nNonce, '<br />\n',
+            'Transactions: ', num_tx, '<br />\n',
+            'Value out: ', format_satoshis(value_out, chain), '<br />\n',
+            'Transaction Fees: ', format_satoshis(block_fees, chain), '<br />\n',
 
-            ['<strong>Average Coin Age:</strong> %6g' % (ss / 86400.0 / satoshis,),
+            ['Average Coin Age: %6g' % (ss / 86400.0 / satoshis,),
              ' days<br />\n']
             if satoshis and (ss is not None) else '',
 
             '' if destroyed is None else
-            ['<strong>Coin-days Destroyed:</strong> ',
+            ['Coin-days Destroyed: ',
              format_satoshis(destroyed / 86400.0, chain), '<br />\n'],
 
-            ['<strong>Cumulative Coin-days Destroyed:</strong> %6g%%<br />\n' %
+            ['Cumulative Coin-days Destroyed: %6g%%<br />\n' %
              (100 * (1 - float(ss) / total_ss),)]
             if total_ss else '',
 
@@ -731,9 +742,9 @@ class Abe:
 
             '</div></article>\n']
 
-        body += ['<article class="module width_3_quarter center3Quart"><header><h3>Transactions</h3></header>\n']
+        body += ['<article class="module w-75"><header><h3>Transactions</h3></header>\n']
 
-        body += ['<table class="tablesorter" cellspacing="0"><thead><tr><th>Transaction</th><th>Fee</th>'
+        body += ['<div class="table-responsive"><table class="tablesorter table-striped" cellspacing="0"><thead><tr><th>Transaction</th><th>Fee</th>'
                  '<th>Size (kB)</th><th>From (amount)</th><th>To (amount)</th>'
                  '</tr></thead>\n']
         for tx_id in tx_ids:
@@ -771,7 +782,7 @@ class Abe:
                     address_version, txout['pubkey_hash'], page['dotdot'])
                 body += [': ', format_satoshis(txout['value'], chain), '<br />']
             body += ['</td></tr>\n']
-        body += '</table></article>\n'
+        body += '</table></div></article>\n'
 
     def handle_block(abe, page):
         block_hash = wsgiref.util.shift_path_info(page['env'])
@@ -929,7 +940,7 @@ class Abe:
         value_out = sum_values(out_rows)
         is_coinbase = None
 
-        body += ['<article class="module width_3_quarter center3Quart"><header><h3>TRANSACTION INFORMATION</h3></header><div class="module_content"><strong>Hash:</strong> ', tx_hash, '<br />\n']
+        body += ['<article class="module w-75"><header><h3>TRANSACTION INFORMATION</h3></header><div class="module_content">Hash: ', tx_hash, '<br />\n']
         chain = None
         for row in block_rows:
             (name, in_longest, nTime, height, blk_hash, tx_pos) = (
@@ -943,7 +954,7 @@ class Abe:
                 abe.log.warning('Transaction ' + tx_hash + ' in multiple chains: '
                              + name + ', ' + chain.name)
             body += [
-                '<strong>Appeared in:</strong> <a href="../block/', blk_hash, '">',
+                'Appeared in: <a href="../block/', blk_hash, '">',
                 escape(name), ' ',
                 height if in_longest else [blk_hash[:10], '...', blk_hash[-4:]],
                 '</a> (', format_time(nTime), ')<br />\n']
@@ -953,20 +964,20 @@ class Abe:
             chain = abe.get_default_chain()
 
         body += [
-            '<strong>Number of inputs:</strong> ', len(in_rows),
+            'Number of inputs: ', len(in_rows),
             ' (<a href="#inputs">Jump to inputs</a>)<br />\n',
-            '<strong>Total in:</strong> ', format_satoshis(value_in, chain), '<br />\n',
-            '<strong>Number of outputs:</strong> ', len(out_rows),
+            'Total in: ', format_satoshis(value_in, chain), '<br />\n',
+            'Number of outputs: ', len(out_rows),
             ' (<a href="#outputs">Jump to outputs</a>)<br />\n',
-            '<strong>Total out:</strong> ', format_satoshis(value_out, chain), '<br />\n',
-            '<strong>Size:</strong> ', tx_size, ' bytes<br />\n',
-            '<strong>Fee:</strong> ', format_satoshis(0 if is_coinbase else
+            'Total out: ', format_satoshis(value_out, chain), '<br />\n',
+            'Size: ', tx_size, ' bytes<br />\n',
+            'Fee: ', format_satoshis(0 if is_coinbase else
                                      (value_in and value_out and
                                       value_in - value_out), chain),
             '<br />\n',
-            '<a href="../rawtx/', tx_hash, '"><strong>Raw transaction</strong></a><br />\n']
+            '<a href="../rawtx/', tx_hash, '">Raw transaction</a><br />\n']
         body += ['</div></article>\n',
-                 '<article class="module width_3_quarter center3Quart"><a name="inputs"><header><h3>Inputs</h3></header></a>\n<table class="tablesorter" cellspacing="0">\n',
+                 '<article class="module w-75"><a name="inputs"><header><h3>Inputs</h3></header></a>\n<div class="table-responsive"><table class="tablesorter table-striped" cellspacing="0">\n',
                  '<thead><tr><th>Index</th><th>Previous output</th><th>Amount</th>',
                  '<th>From address</th>']
         if abe.store.keep_scriptsig:
@@ -975,14 +986,14 @@ class Abe:
         for row in in_rows:
             row_to_html(row, 'i', 'o',
                         'Generation' if is_coinbase else 'Unknown')
-        body += ['</table></article>\n',
-                 '<article class="module width_3_quarter center3Quart"><a name="outputs"><header><h3>Outputs</h3></header></a>\n<table class="tablesorter" cellspacing="0">\n',
+        body += ['</table></div></article>\n',
+                 '<article class="module w-75"><a name="outputs"><header><h3>Outputs</h3></header></a>\n<div class="table-responsive"><table class="tablesorter table-striped" cellspacing="0">\n',
                  '<thead><tr><th>Index</th><th>Redeem</th><th>Amount</th>',
                  '<th>To address</th><th>ScriptPubKey</th></tr></thead>\n']
         for row in out_rows:
             row_to_html(row, 'o', 'i', 'Not yet redeemed')
 
-        body += ['</table></article>\n']
+        body += ['</table></div></article>\n']
 
     def handle_rawtx(abe, page):
         abe.do_raw(page, abe.do_rawtx)
@@ -1181,26 +1192,26 @@ class Abe:
         else:
             link = address[0 : abe.shortlink_type]
 
-        body += ['<article class="module width_half centerHalf"><header><h3>ADDRESS INFORMATION</h3></header><div class="module_content">']
-        body += ['<strong>Address:</strong> ', address]
-        body += ['<br /><strong>Balance:</strong> '] + format_amounts(balance, True)
+        body += ['<article class="module w-50"><header><h3>ADDRESS INFORMATION</h3></header><div class="module_content">']
+        body += ['Address: ', address]
+        body += ['<br />Balance: '] + format_amounts(balance, True)
 
         for chain in chains:
             balance[chain.id] = 0  # Reset for history traversal.
 
         body += ['<br />\n',
-                 '<strong>Transactions in:</strong> ', count[0], '<br />\n',
-                 '<strong>Received:</strong> ', format_amounts(received, False), '<br />\n',
-                 '<strong>Transactions out:</strong> ', count[1], '<br />\n',
-                 '<strong>Sent:</strong> ', format_amounts(sent, False), '<br />\n']
+                 'Transactions in: ', count[0], '<br />\n',
+                 'Received: ', format_amounts(received, False), '<br />\n',
+                 'Transactions out: ', count[1], '<br />\n',
+                 'Sent: ', format_amounts(sent, False), '<br />\n']
 
-        body += ['</div></article><article class="module width_3_quarter center3Quart">\n'
+        body += ['</div></article><article class="module w-75">\n'
                  '<header><h3>Transactions</h3></header>\n']
                  
         if too_many:
-            body += ['<p id="limitTxs"><strong>Too many transactions to display.</strong></p>']
+            body += ['<p id="limitTxs">Too many transactions to display.</p>']
         else:
-            body += ['<table class="tablesorter" cellspacing="0">\n<thead><tr><th>Transaction</th><th>Block</th>'
+            body += ['<div class="table-responsive"><table class="tablesorter table-striped" cellspacing="0">\n<thead><tr><th>Transaction</th><th>Block</th>'
                      '<th>Approx. Time</th><th>Amount</th><th>Balance</th>'
                      '</tr></thead>\n']
 
@@ -1221,19 +1232,19 @@ class Abe:
                          format_satoshis(balance[elt['chain_id']], chain),
                          '</td>',
                          '</tr>\n']
-        body += ['</table></article>\n']
+        body += ['</table></div></article>\n']
 
     def search_form(abe, page):
         q = (page['params'].get('q') or [''])[0]
         return [
-            '<article id="search" class="module width_half centerHalf">'
+            '<article id="search" class="module w-50">'
             '<header><h3>SEARCH</h3></header>'
-            '<div class="module_content">'
+            # '<div class="module_content">'
             '<form action="', page['dotdot'], 'search">\n'
             '<input id="searchBar" name="q" placeholder="Search by address, block number or hash, transaction or'
             ' public key hash" value="', escape(q), '" />'
             '</form>\n'
-            '</div>'
+            # '</div>'
             '</article>']
 
     def handle_search(abe, page):
@@ -1268,7 +1279,7 @@ class Abe:
             raise Redirect()
 
         body = page['body']
-        body += ['<article class="module width_half centerHalf"><header><h3>SEARCH RESULTS</h3></header><div class="module_content">\n<ul>\n']
+        body += ['<article class="module w-50"><header><h3>SEARCH RESULTS</h3></header><div class="module_content">\n<ul>\n']
         for result in found:
             body += [
                 '<li><a href="', page['dotdot'], escape(result['uri']), '">',
@@ -1450,7 +1461,7 @@ class Abe:
         return diffs
     
     def difficulty_graph(abe, page, title, id, interval, format, diffs):
-        page['body'] += ['<article class="module width_3_quarter center3Quart"><header><h3>', title,'</h3></header>\n']
+        page['body'] += ['<article class="module w-75"><header><h3>', title,'</h3></header>\n']
         page['body'] += ['<div id="', id, '" class="chart"></div>']
         page['body'] += ['<script type="text/javascript"> $(document).ready(function(){',
                          '$.jqplot("', id, '",  [[']
@@ -1664,7 +1675,7 @@ class Abe:
                     page['content_type'] = 'application/json'
 
     def q(abe, page):
-        page['body'] = ['<article class="module width_half centerHalf"><header><h3>Supported APIs</h3></header><div class="module_content">\n<ul>\n']
+        page['body'] = ['<article class="module w-50"><header><h3>Supported APIs</h3></header><div class="module_content">\n<ul>\n']
         for name in dir(abe):
             if not name.startswith("q_"):
                 continue

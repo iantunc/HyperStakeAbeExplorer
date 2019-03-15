@@ -1,0 +1,11 @@
+html, body{
+    background-color: #333333;
+}
+.row {
+	margin-right: 0;
+	margin-left: 0;
+}
+
+#navP3 {
+text-align: right;
+}
