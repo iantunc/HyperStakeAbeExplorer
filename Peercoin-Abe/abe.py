@@ -75,6 +75,7 @@ DEFAULT_TEMPLATE = """
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <!-- Latest compiled JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../jquery.tablesorter.js"></script>
 <link rel="stylesheet" type="text/css" href="%(dotdot)s%(STATIC_PATH)sbootstr.css" />
     <title>%(title)s Block Explorer</title>
 </head>
@@ -493,7 +494,7 @@ class Abe:
                  '<header><h3>BLOCKS</h3></header>'
                  , nav, '\n',
                  '<div class="table-responsive">'
-                 '<table class="tablesorter table-striped" cellspacing="0"><thead>'
+                 '<table id="sorter" class="tablesorter table-striped" cellspacing="0"><thead>'
                  '<tr><th>Block</th>',
                  '<th>Approx. Time</th>',
                  '<th>Transactions</th>',
@@ -508,7 +509,7 @@ class Abe:
                  ['<th>Satoshi-seconds</th>',
                   '<th>Total ss</th>']
                  if extra else '',
-                 '</tr></thead>\n']
+                 '</tr></thead><tbody>\n']
         for row in rows:
             (hash, height, nTime, num_tx, nBits, value_out,
              seconds, ss, satoshis, destroyed, total_ss) = row
@@ -545,7 +546,7 @@ class Abe:
                  '</td><td>', '%8g' % total_ss] if extra else '',
                 '</td></tr>\n']
 
-        body += ['</table></div>\n', nav, '</article>\n']
+        body += ['</tbody></table></div>\n', nav, '</article><script type="text/javascript">$( window ).on( "load", function() { $("#sorter").tablesorter(); }); </script>\n']
 
     def _show_block(abe, where, bind, page, dotdotblock, chain):
         address_version = ('\0' if chain is None
@@ -744,9 +745,9 @@ class Abe:
 
         body += ['<article class="module w-75"><header><h3>Transactions</h3></header>\n']
 
-        body += ['<div class="table-responsive"><table class="tablesorter table-striped" cellspacing="0"><thead><tr><th>Transaction</th><th>Fee</th>'
+        body += ['<div class="table-responsive"><table id="sorter" class="tablesorter table-striped" cellspacing="0"><thead><tr><th>Transaction</th><th>Fee</th>'
                  '<th>Size (kB)</th><th>From (amount)</th><th>To (amount)</th>'
-                 '</tr></thead>\n']
+                 '</tr></thead><tbody>\n']
         for tx_id in tx_ids:
             tx = txs[tx_id]
             body += ['<tr><td><a href="../tx/' + tx['hash'] + '">',
@@ -782,7 +783,7 @@ class Abe:
                     address_version, txout['pubkey_hash'], page['dotdot'])
                 body += [': ', format_satoshis(txout['value'], chain), '<br />']
             body += ['</td></tr>\n']
-        body += '</table></div></article>\n'
+        body += '</tbody></table></div></article><script type="text/javascript">$( window ).on( "load", function() { $("#sorter").tablesorter(); }); </script>\n'
 
     def handle_block(abe, page):
         block_hash = wsgiref.util.shift_path_info(page['env'])
@@ -977,23 +978,23 @@ class Abe:
             '<br />\n',
             '<a href="../rawtx/', tx_hash, '">Raw transaction</a><br />\n']
         body += ['</div></article>\n',
-                 '<article class="module w-75"><a name="inputs"><header><h3>Inputs</h3></header></a>\n<div class="table-responsive"><table class="tablesorter table-striped" cellspacing="0">\n',
+                 '<article class="module w-75"><a name="inputs"><header><h3>Inputs</h3></header></a>\n<div class="table-responsive"><table id="sorter1" class="tablesorter table-striped" cellspacing="0">\n',
                  '<thead><tr><th>Index</th><th>Previous output</th><th>Amount</th>',
                  '<th>From address</th>']
         if abe.store.keep_scriptsig:
             body += ['<th>ScriptSig</th>']
-        body += ['</tr></thead>\n']
+        body += ['</tr></thead><tbody>\n']
         for row in in_rows:
             row_to_html(row, 'i', 'o',
                         'Generation' if is_coinbase else 'Unknown')
-        body += ['</table></div></article>\n',
-                 '<article class="module w-75"><a name="outputs"><header><h3>Outputs</h3></header></a>\n<div class="table-responsive"><table class="tablesorter table-striped" cellspacing="0">\n',
+        body += ['</tbody></table></div></article><script type="text/javascript">$( window ).on( "load", function() { $("#sorter1").tablesorter(); }); </script>\n',
+                 '<article class="module w-75"><a name="outputs"><header><h3>Outputs</h3></header></a>\n<div class="table-responsive"><table id="sorter2" class="tablesorter table-striped" cellspacing="0">\n',
                  '<thead><tr><th>Index</th><th>Redeem</th><th>Amount</th>',
-                 '<th>To address</th><th>ScriptPubKey</th></tr></thead>\n']
+                 '<th>To address</th><th>ScriptPubKey</th></tr></thead><tbody>\n']
         for row in out_rows:
             row_to_html(row, 'o', 'i', 'Not yet redeemed')
 
-        body += ['</table></div></article>\n']
+        body += ['</tbody></table></div></article><script type="text/javascript">$( window ).on( "load", function() { $("#sorter2").tablesorter(); }); </script>\n']
 
     def handle_rawtx(abe, page):
         abe.do_raw(page, abe.do_rawtx)
@@ -1211,9 +1212,9 @@ class Abe:
         if too_many:
             body += ['<p id="limitTxs">Too many transactions to display.</p>']
         else:
-            body += ['<div class="table-responsive"><table class="tablesorter table-striped" cellspacing="0">\n<thead><tr><th>Transaction</th><th>Block</th>'
+            body += ['<div class="table-responsive"><table id="sorter" class="tablesorter table-striped" cellspacing="0">\n<thead><tr><th>Transaction</th><th>Block</th>'
                      '<th>Approx. Time</th><th>Amount</th><th>Balance</th>'
-                     '</tr></thead>\n']
+                     '</tr></thead><tbody>\n']
 
             for elt in txpoints:
                 chain = abe.store.get_chain_by_id(elt['chain_id'])
@@ -1232,7 +1233,7 @@ class Abe:
                          format_satoshis(balance[elt['chain_id']], chain),
                          '</td>',
                          '</tr>\n']
-        body += ['</table></div></article>\n']
+        body += ['</tbody></table></div></article><script type="text/javascript">$( window ).on( "load", function() { $("#sorter").tablesorter({ sortList: [[2,1]]}); }); </script>\n']
 
     def search_form(abe, page):
         q = (page['params'].get('q') or [''])[0]
