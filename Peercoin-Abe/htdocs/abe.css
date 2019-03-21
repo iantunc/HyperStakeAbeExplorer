@@ -64,11 +64,15 @@ section#main{
     margin-bottom: 10px;
 }
 #navP1{
-    margin-bottom: 0;
+    margin-bottom: 10px;
 }
 #navP1 a, #navP3 a{
     padding: 0 4px;
     font-size: 13px;
+}
+
+.navbutton {
+    height: 20px;
 }
 strong{
     padding-right: 3px;

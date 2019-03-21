@@ -459,9 +459,9 @@ class Abe:
         nav = ['<div id="nav" class="align-items-center row"><p id="navP1" class="col-sm-4">']
 	if max_height > hi:
 	    nav += ['<a href="',
-               basename, '?count=', str(count), '">&#9668;&#9668;</a>']
+               basename, '?count=', str(count), '"><img class="navbutton" src="../barr2.png"></a>']
             nav += [' <a href="', basename, '?hi=', str(hi + count),
-                 '&amp;count=', str(count), '">&#9668;<lt;</a>']
+                 '&amp;count=', str(count), '"><img class="navbutton" src="../barr.png"></a>']
         nav += ['</p><p id="navP2"class="col-sm-4">']
                  
         for c in (20, 50, 100, 500, 1000):
@@ -479,11 +479,11 @@ class Abe:
                  
         if hi >= count:
             nav += ['<a href="', basename, '?hi=', str(hi - count),
-                        '&amp;count=', str(count), '"> &#9658;</a>']
+                        '&amp;count=', str(count), '"><img class="navbutton" src="../arr.png"></a>']
 
         if hi != count - 1:
             nav += ['<a href="', basename, '?hi=', str(count - 1),
-                        '&amp;count=', str(count), '"> &#9658;&#9658;</a>']
+                        '&amp;count=', str(count), '"><img class="navbutton" src="../arr2.png"></a>']
         nav += ['</p></div>']
         
         extra = False
@@ -502,7 +502,7 @@ class Abe:
                  '<th>Outstanding</th>',
                  '<th>Average Age</th>',
                  '<th>Chain Age</th>',
-                 '<th>% ',
+                 '<th>',
                  '<a href="https://en.bitcoin.it/wiki/Bitcoin_Days_Destroyed">',
                  'CoinDD</a></th>',
                  ['<th>Satoshi-seconds</th>',
