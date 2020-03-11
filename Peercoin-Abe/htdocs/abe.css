@@ -94,6 +94,8 @@ strong{
 }
 #limitTxs{
     text-align: center;
+    color: #C00;
+    padding-top: 10px;
 }
 .chart{
     width: 90%;

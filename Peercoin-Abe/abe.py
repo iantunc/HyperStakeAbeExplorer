@@ -81,8 +81,8 @@ DEFAULT_TEMPLATE = """
 </head>
 <body>
     <section id="main" class="d-flex align-items-center flex-column justify-content-center container-fluid">
-    <a href="http://hypexplorer.ml" title="Go back to the hypexplorer.ml home">
-        <img id="hypexplorerml" alt="Go back to the hypexplorer.ml home" src="%(dotdot)s%(STATIC_PATH)shyperstake-128.png" />
+    <a href="http://hyperexplorer.ml" title="Go back to the hyperexplorer.ml home">
+        <img id="hypexplorerml" alt="Go back to the hyperexplorer.ml home" src="%(dotdot)s%(STATIC_PATH)shyperstake-128.png" />
     </a><p>
     %(body)s
         <div id="footer">
@@ -1210,7 +1210,7 @@ class Abe:
                  '<header><h3>Transactions</h3></header>\n']
                  
         if too_many:
-            body += ['<p id="limitTxs">Too many transactions to display.</p>']
+            body += ['<div class="table-responsive"><p id="limitTxs">Too many transactions to display.</p><table id="sorter" class="tablesorter table-striped" cellspacing="0"><thead></thead><tbody>']
         else:
             body += ['<div class="table-responsive"><table id="sorter" class="tablesorter table-striped" cellspacing="0">\n<thead><tr><th>Transaction</th><th>Block</th>'
                      '<th>Approx. Time</th><th>Amount</th><th>Balance</th>'
